@@ -5,11 +5,12 @@ import {
   View,
   Image,
 } from "react-native";
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import {Loading, TextInputCustom, ButtonCustom} from '../components/Index.js';
 import { useSelector, useDispatch } from "react-redux";
 import { setEmail,setIsLoading,setPwd } from "../redux/userSlice.js";
-import { login } from "../redux/userSlice.js";
+import { login, autoLogin } from "../redux/userSlice.js";
+
 
 
 
@@ -21,7 +22,14 @@ const Login = ({ navigation }) => {
   // userSlice içerisindeki reducer yapılarını kullanmak için.
   const dispacth = useDispatch();
 
-  console.log(email," ", pwd, " ", isLoading);
+
+
+  // Auth
+
+  useEffect(()=>{
+    dispacth(autoLogin())
+  },[])
+
 
   return (
     <View style={styles.container}>

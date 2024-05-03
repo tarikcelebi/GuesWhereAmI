@@ -1,13 +1,29 @@
 import React from "react";
-import { View,Text,StyleSheet } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView } from "react-native";
+import NavBar from "../components/NavBar";
 
-const ProfilePage = ()=>{
-    return(
-        <View style={styles.container}>
-            <Text>ProfilePage</Text>
-        </View>
-    )
-}
+const ProfilePage = ({navigation}) => {
+  return (
+    <SafeAreaView style={styles.container}>
+      <View>
+        <Text>ProfilePage</Text>
+      </View>
+      <NavBar 
+        navigation={navigation}
+      />
+    </SafeAreaView>
+  );
+};
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  main: {
+    flex: 3,
+  },
+});
 
 export default ProfilePage;

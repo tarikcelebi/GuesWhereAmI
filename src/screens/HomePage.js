@@ -1,17 +1,35 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import {
   collection,
   addDoc,
   getDocs,
   doc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
+import { useDispatch } from "react-redux";
+import { logout } from "../redux/userSlice.js";
+import NavBar from "../components/NavBar.js";
 import ButtonCustom from "../components/ButtonCustom.js";
 
-const HomePage = () => {
-  const [data, setData] = useState({});
+
+const HomePage = ({navigation}) => {
+  const [data, setData] = useState([]);
+  const dispacth = useDispatch();
+
+  const handleLogout = () => {
+    dispacth(logout());
+  };
+
   const sendData = async () => {
     try {
       const docRef = await addDoc(collection(db, "users"), {
@@ -26,10 +44,23 @@ const HomePage = () => {
   };
 
   const getData = async () => {
-    const querySnapshot = await getDocs(collection(db, "users"));
-    querySnapshot.forEach((doc) => {
-      console.log(`${doc.id} => ${doc.data()}`);
-      setData([...doc.data()]);
+    const allData = [];
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"));
+      querySnapshot.forEach((doc) => {
+        //console.log(`${doc.id} => ${doc.data()}`, "line 31");
+        allData.push({ ...doc.data(), id: doc.id });
+      });
+      setData(allData);
+    } catch (error) {
+      console.log(error, "line 35");
+    }
+  };
+
+  const updateData = async (value) => {
+    const userData = await doc(db, "users", value);
+    const update = await updateDoc(userData, {
+      title: "Updated title",
     });
   };
 
@@ -41,30 +72,38 @@ const HomePage = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text>HomePage</Text>
-      <Text>{data.title}</Text>
-      <Text>{data.content}</Text>
-      <Text>{data.lesson}</Text>
-      <ButtonCustom
-        title="Save"
-        buttonColor="white"
-        pressedButtonColor="blue"
-        handleOnPress={sendData}
+    <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
+        <Text>HomePage</Text>
+        {data.map((item, index) => {
+          return (
+            <View key={index}>
+              <Text>{item.id}</Text>
+              <Text>{item.title}</Text>
+              <Text>{item.content}</Text>
+              <Text>{item.lesson}</Text>
+            </View>
+          );
+        })}
+      </View>
+      <View style={styles.main}>
+        <ButtonCustom
+          title="Save"
+          buttonColor="white"
+          pressedButtonColor="blue"
+          handleOnPress={sendData}
+        />
+        <ButtonCustom
+          title="logout"
+          buttonColor="white"
+          pressedButtonColor="blue"
+          handleOnPress={handleLogout}
+        />
+      </View>
+      <NavBar
+      navigation={navigation}
       />
-      <ButtonCustom
-        title="Get Data"
-        buttonColor="white"
-        pressedButtonColor="blue"
-        handleOnPress={getData}
-      />
-      <ButtonCustom
-        title="delete Data"
-        buttonColor="white"
-        pressedButtonColor="blue"
-        handleOnPress={deleteData}
-      />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -75,6 +114,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "tomato",
   },
+  main: {
+    flex: 3,
+  },
+
 });
 
 export default HomePage;

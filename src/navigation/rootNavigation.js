@@ -6,6 +6,7 @@ import AuthStack from "./AuthStack.js";
 import app from "../firebaseConfig.js";
 import { useSelector } from "react-redux";
 
+
 const rootNavigation = ()=>{
 
     const {isAuth} = useSelector(state=>state.user);
