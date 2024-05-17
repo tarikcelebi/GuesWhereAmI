@@ -3,6 +3,7 @@ import Login from './Login';
 import SignUpPage from './SignUp';
 import ProfilePage from './ProfilePage';
 import PlacesPage from './PlacesPage';
+import PlaceWallPage from './PlaceWallPage';
 
 
 export{
@@ -10,5 +11,6 @@ export{
     Login,
     SignUpPage,
     ProfilePage,
-    PlacesPage
+    PlacesPage,
+    PlaceWallPage
 }

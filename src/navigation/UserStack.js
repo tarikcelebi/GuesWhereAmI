@@ -1,7 +1,7 @@
 // kullanıcı giriş yaptıktan sonra ulaşabileceği sayfalar.
 import React from "react";
 
-import { HomePage, PlacesPage, ProfilePage } from "../screens/Index";
+import { HomePage, PlacesPage, ProfilePage,PlaceWallPage } from "../screens/Index";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();
@@ -22,6 +22,11 @@ const UserStack = () => {
       <Stack.Screen
         name="PlacesPage"
         component={PlacesPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="PlaceWallPage"
+        component={PlaceWallPage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

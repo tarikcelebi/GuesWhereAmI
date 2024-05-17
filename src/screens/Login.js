@@ -12,8 +12,6 @@ import { setEmail,setIsLoading,setPwd } from "../redux/userSlice.js";
 import { login, autoLogin } from "../redux/userSlice.js";
 
 
-
-
 const Login = ({ navigation }) => {
   
   const[email,setEmail]=useState("");

@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -81,6 +81,14 @@ export const register = createAsyncThunk(
   }
 );
 
+export const userEnteredPlaceInfo = createAction(
+  "user/userEnteredPlaceInfo", (placeInfo)=>{
+    return {
+      payload:placeInfo
+    };
+  }
+)
+
 const initialState = {
   email: "",
   pwd: "",
@@ -89,6 +97,10 @@ const initialState = {
   token: "",
   user: "",
   err: "",
+
+  placeName:"",
+  latitude:"",
+  longitude:"",
 };
 
 export const userSlice = createSlice({
@@ -164,6 +176,13 @@ export const userSlice = createSlice({
         state.isLoading=false
         state.isAuth = false
         state.err = action.payload
+      })
+      .addCase(userEnteredPlaceInfo,(state,action)=>{
+        const { placeName, latitude, longitude } = action.payload;
+        state.placeName = placeName;
+        state.latitude = latitude;
+        state.longitude=longitude;
+
       })
   },
 });
