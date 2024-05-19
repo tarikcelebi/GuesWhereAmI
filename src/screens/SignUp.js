@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView,Image, Pressable } from "react-native";
 import { TextInputCustom, ButtonCustom, Loading } from "../components/Index.js";
 import { useDispatch, useSelector } from "react-redux";
-import { register } from "../redux/userSlice.js";
+import { register } from "../redux/reducers/userSlice.js";
 
 const SignUpPage = ({navigation}) => {
   const [name, setName] = useState("");

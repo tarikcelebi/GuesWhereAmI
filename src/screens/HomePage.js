@@ -17,7 +17,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { useDispatch } from "react-redux";
-import { logout } from "../redux/userSlice.js";
+import { logout } from "../redux/reducers/userSlice.js";
 import NavBar from "../components/NavBar.js";
 import ButtonCustom from "../components/ButtonCustom.js";
 

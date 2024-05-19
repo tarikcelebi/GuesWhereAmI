@@ -19,23 +19,23 @@ import { API_KEY } from "../../environment";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { userEnteredPlaceInfo } from "../redux/userSlice";
+import { userEnteredPlaceInfo } from "../redux/reducers/userSlice.js";
 import Datas from "../../Data.js";
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371; 
-    const dLat = (lat2 - lat1) * (Math.PI / 180); 
-    const dLon = (lon2 - lon1) * (Math.PI / 180);
-    const a =
-      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-      Math.cos(lat1 * (Math.PI / 180)) *
-        Math.cos(lat2 * (Math.PI / 180)) *
-        Math.sin(dLon / 2) *
-        Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c; 
-    return distance;
-  };
+  const R = 6371;
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+      Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c;
+  return distance;
+};
 
 const PlacesPage = () => {
   const navigation = useNavigation();
@@ -84,7 +84,7 @@ const PlacesPage = () => {
   useEffect(() => {
     if (mylocation && cafes.length > 0) {
       const nearbyCafes = cafes.filter(
-        cafe =>
+        (cafe) =>
           calculateDistance(
             mylocation.latitude,
             mylocation.longitude,
@@ -93,19 +93,15 @@ const PlacesPage = () => {
           ) <= 2
       );
       setNearbyCafes(nearbyCafes);
-      console.log("Line 95(PlacePage)")
+      console.log("Line 95(PlacePage)");
       console.log(nearbyCafes);
     }
   }, [mylocation, cafes]);
 
-
-
-
-
-  const handleCalloutPress = () => {
+  const handleCalloutPress = ({ id, title }) => {
     dispatch(
       userEnteredPlaceInfo({
-        placeName: "CoffeeShop",
+        placeName: title ,
         latitude: mylocation.latitude,
         longitude: mylocation.longitude,
       })
@@ -140,7 +136,10 @@ const PlacesPage = () => {
               title="Default Location"
               description="I am here"
             >
-              <Callout style={styles.placeCallout} onPress={handleCalloutPress}>
+              <Callout
+                style={styles.placeCallout}
+                onPress={handleCalloutPress}
+              >
                 <Text style={styles.text}>Heyy</Text>
                 <Button title="Go to Place Wall" />
               </Callout>
@@ -162,20 +161,25 @@ const PlacesPage = () => {
               </Callout>
             </Marker>
           )}
-        {nearbyCafes.map(cafe=>(
-          <Marker
-            key={cafe.id}
-            coordinate={{
-              latitude:cafe.latitude,
-              longitude:cafe.longitude,
-            }}>
-
+          {nearbyCafes.map((cafe) => (
+            <Marker
+              key={cafe.id}
+              coordinate={{
+                latitude: cafe.latitude,
+                longitude: cafe.longitude,
+              }}
+            >
+              <Callout
+                style={styles.placeCallout}
+                onPress={() => {
+                  handleCalloutPress({ id: cafe.id, title: cafe.title });
+                }}
+              >
+                <Text style={styles.text}>{cafe.title}</Text>
+                <Button title="Go to place wall" />
+              </Callout>
             </Marker>
-
-        ))
-
-        }
-
+          ))}
         </MapView>
 
         <View style={styles.searchingContainer}>

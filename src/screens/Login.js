@@ -8,8 +8,8 @@ import {
 import React,{useState,useEffect} from "react";
 import {Loading, TextInputCustom, ButtonCustom} from '../components/Index.js';
 import { useSelector, useDispatch } from "react-redux";
-import { setEmail,setIsLoading,setPwd } from "../redux/userSlice.js";
-import { login, autoLogin } from "../redux/userSlice.js";
+import { setEmail,setIsLoading,setPwd } from "../redux/reducers/userSlice.js";
+import { login, autoLogin } from "../redux/reducers/userSlice.js";
 
 
 const Login = ({ navigation }) => {
