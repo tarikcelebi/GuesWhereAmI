@@ -71,7 +71,7 @@ export const register = createAsyncThunk(
       const user = userCredential.user;
       const token = userCredential.stsTokenManager.accessToken;
       await sendEmailVerification(user);
-      await AsyncStorage.getItem(token);i
+      await AsyncStorage.getItem(token);
 
       return token;
 
