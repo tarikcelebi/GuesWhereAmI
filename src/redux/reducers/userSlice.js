@@ -8,6 +8,11 @@ import {
 } from "firebase/auth";
 import { activate } from "firebase/remote-config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { doc,setDoc,collection, addDoc } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob";
+
 
 export const login = createAsyncThunk("user/login", async ({ email, pwd }) => {
   console.log("username: ", email);
@@ -18,6 +23,7 @@ export const login = createAsyncThunk("user/login", async ({ email, pwd }) => {
 
     const user = userCredential.user;
     const token = user.stsTokenManager.accessToken;
+    console.log(token);
 
     const userData = {
       token,
@@ -33,11 +39,29 @@ export const login = createAsyncThunk("user/login", async ({ email, pwd }) => {
   }
 });
 
+const getUserIdFromToken = (token) => {
+  try {
+    const decodedToken = jwtDecode(token);
+    console.log(decodedToken);
+    return decodedToken; 
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    throw new Error("Invalid token");
+  }
+};
+
 export const autoLogin = createAsyncThunk("user/autoLogin", async () => {
   try {
     const token = await AsyncStorage.getItem("UserData");
 
+
     if (token) {
+
+      const user = getUserIdFromToken(token);
+      console.log(userId);
+      await setDoc(doc(db,"Users","currentUser"),{
+        id:user.user_id
+      })
       return token;
     } else {
       throw new Error("user couldnt find");
