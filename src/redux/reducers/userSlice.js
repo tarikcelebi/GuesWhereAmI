@@ -23,7 +23,6 @@ export const login = createAsyncThunk("user/login", async ({ email, pwd }) => {
 
     const user = userCredential.user;
     const token = user.stsTokenManager.accessToken;
-    console.log(token);
 
     const userData = {
       token,
@@ -58,11 +57,12 @@ export const autoLogin = createAsyncThunk("user/autoLogin", async () => {
     if (token) {
 
       const user = getUserIdFromToken(token);
-      console.log(userId);
+      console.log(user);
       await setDoc(doc(db,"Users","currentUser"),{
-        id:user.user_id
+        id:user.user_id,
+        name:user.email
       })
-      return token;
+      return user;
     } else {
       throw new Error("user couldnt find");
     }
@@ -121,7 +121,7 @@ const initialState = {
   token: "",
   user: "",
   err: "",
-
+  placeId:"",
   placeName:"",
   latitude:"",
   longitude:"",
@@ -202,10 +202,11 @@ export const userSlice = createSlice({
         state.err = action.payload
       })
       .addCase(userEnteredPlaceInfo,(state,action)=>{
-        const { placeName, latitude, longitude } = action.payload;
+        const { placeName, latitude, longitude,placeId } = action.payload;
         state.placeName = placeName;
         state.latitude = latitude;
         state.longitude=longitude;
+        state.placeId=placeId;
 
       })
   },

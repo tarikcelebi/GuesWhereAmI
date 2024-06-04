@@ -4,6 +4,7 @@ import SignUpPage from './SignUp';
 import ProfilePage from './ProfilePage';
 import PlacesPage from './PlacesPage';
 import PlaceWallPage from './PlaceWallPage';
+import CreatePostPage from './CreatePostPage';
 
 
 export{
@@ -12,5 +13,6 @@ export{
     SignUpPage,
     ProfilePage,
     PlacesPage,
-    PlaceWallPage
+    PlaceWallPage,
+    CreatePostPage
 }

@@ -101,7 +101,8 @@ const PlacesPage = () => {
   const handleCalloutPress = ({ id, title }) => {
     dispatch(
       userEnteredPlaceInfo({
-        placeName: title ,
+        placeId:id,
+        placeName: title,
         latitude: mylocation.latitude,
         longitude: mylocation.longitude,
       })
@@ -130,16 +131,13 @@ const PlacesPage = () => {
               region={{
                 latitude: mylocation.latitude,
                 longitude: mylocation.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
+                latitudeDelta: 0.4,
+                longitudeDelta: 0.4,
               }}
               title="Default Location"
               description="I am here"
             >
-              <Callout
-                style={styles.placeCallout}
-                onPress={handleCalloutPress}
-              >
+              <Callout style={styles.placeCallout} onPress={handleCalloutPress}>
                 <Text style={styles.text}>Heyy</Text>
                 <Button title="Go to Place Wall" />
               </Callout>
