@@ -203,6 +203,7 @@ const PlacesPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:"tomato"
   },
   map: {
     width: Dimensions.get("window").width,

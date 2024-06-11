@@ -2,14 +2,16 @@ import Loading from "./Loading";
 import TextInputCustom from "./TextInputCustom";
 import ButtonCustom from "./ButtonCustom";
 import NavBar from "./NavBar";
-import Posts from "./Home/Posts";
+import Post from "./Home/Post";
 import Header from "./Home/Header";
+import ChatList from "./ChatList";
 
 export {
-    Loading,
-    TextInputCustom,
-    ButtonCustom,
-    NavBar,
-    Posts,
-    Header
-}
+  Loading,
+  TextInputCustom,
+  ButtonCustom,
+  NavBar,
+  Post,
+  Header,
+  ChatList,
+};

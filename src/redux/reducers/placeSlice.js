@@ -1,8 +1,4 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  createAction,
-} from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import {
   doc,
   setDoc,
@@ -10,65 +6,43 @@ import {
   addDoc,
   updateDoc,
   Timestamp,
-  storage
+  getDocs
 } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { buildCreateApi } from "@reduxjs/toolkit/query";
-import Datas from "../../../Data";
-
-const placesCollectionRef = collection(db, "Datas");
-
-
-Datas.forEach( async (data) => {
-  const placeDocRef = await addDoc(placesCollectionRef, data);
-  const imageRef = ref(storage, `places/${placeDocRef.id}.jpg`);
-  await uploadBytes(imageRef, data.image);
-  await updateDoc(placeDocRef, { imageUrl: imageRef.fullPath })
-   .then((docRef) => {
-      console.log(`Document written with ID: ${docRef.id}`);
-    })
-   .catch((error) => {
-      console.error("Error adding document: ", error);
-    });
-});
-
 
 export const AddPostToPlaceWall = createAsyncThunk(
   "place/AddPostToPlaceWall",
   async ({ placeUID, text, userUID }) => {
     try {
-      const placeRef = doc(db, "places", "placeUID");
+      const placeRef = doc(db, "places", placeUID);
       await setDoc(placeRef, {});
       const postsCollectionRef = collection(placeRef, "Posts");
       const newPostRef = await addDoc(postsCollectionRef, {
         userId: userUID,
         postContent: text,
-       createdAt: Timestamp.fromDate(new Date()),
+        createdAt: Timestamp.fromDate(new Date()),
       });
       const newPostId = newPostRef.id;
       return {
         text,
         userUID,
-       id: newPostId,
+        id: newPostId,
       }; // Return the new post data
     } catch (err) {
       console.error(err.message);
-      console.log(err.message)
+      console.log(err.message);
       throw err;
     }
   }
 );
 
-
-
-
-
 export const fetchPosts = createAsyncThunk(
   "place/fetchPosts",
   async (placeUID) => {
     try {
-      const PostsRef = collection(db, "places", "placeUID", "Posts");
+      const PostsRef = collection(db, "places", placeUID, "Posts");
       const snapshot = await getDocs(PostsRef);
       const posts = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       return { placeUID, posts };
@@ -80,11 +54,13 @@ export const fetchPosts = createAsyncThunk(
 );
 
 const initialState = {
-  posts: [{
-    id:"",
-    userId:"",
-    postContent:"",
-  }],
+  posts: [
+    {
+      id: "",
+      userId: "",
+      postContent: "",
+    },
+  ],
   isLoading: false,
   error: null,
 };

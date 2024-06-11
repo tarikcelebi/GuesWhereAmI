@@ -5,7 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Dimensions
 } from "react-native";
+const { width, height } = Dimensions.get('window');
+const NAVBAR_HEIGHT = height * 0.10; 
 
 const NavBar = ({ navigation }) => {
   return (
@@ -40,7 +43,9 @@ const NavBar = ({ navigation }) => {
           source={require("../../assets/LocationIcon.png")}
         />
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={()=>{
+        navigation.navigate("ChatPage");
+      }}>
         <Image
           style={styles.image}
           source={require("../../assets/MessageIcon.png")}
@@ -66,8 +71,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: "tomato",
-    height: 80, // Adjust the height as needed
-    borderTopWidth: 1,
+    height: NAVBAR_HEIGHT, 
     borderTopColor: "gray",
     paddingHorizontal: 15,
     paddingBottom: 15,

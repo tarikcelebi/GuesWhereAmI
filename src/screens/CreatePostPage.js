@@ -30,9 +30,7 @@ const CreatePostPage = () => {
     setPostContent(text);
   };
 
-  console.log(typeof AddPostToPlaceWall);
-
-  const shareContentHandling = async () => {
+  const handleShareContent = async () => {
     try {
       const currentUser = await getCurrentUserFromDB();
       if (currentUser && placeID) {
@@ -66,7 +64,7 @@ const CreatePostPage = () => {
         />
         <ButtonCustom
           title="Share Post&Check-In"
-          handleOnPress={shareContentHandling}
+          handleOnPress={handleShareContent}
           buttonColor="white"
           pressedButtonColor="blue"
         />

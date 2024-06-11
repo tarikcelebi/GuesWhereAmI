@@ -6,7 +6,8 @@ import {
   PlacesPage,
   ProfilePage,
   PlaceWallPage,
-  CreatePostPage
+  CreatePostPage,
+  ChatPage,
 } from "../screens/Index";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -38,6 +39,11 @@ const UserStack = () => {
       <Stack.Screen
         name="CreatePostPage"
         component={CreatePostPage}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChatPage"
+        component={ChatPage}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
