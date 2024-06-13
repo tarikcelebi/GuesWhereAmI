@@ -14,7 +14,9 @@ const ChatItem = ({ item }) => {
 };
 const styles = StyleSheet.create({
     container:{
-
+      margin:10,
+      padding:10,
+      
     }
 })
 
