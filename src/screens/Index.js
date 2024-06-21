@@ -6,6 +6,7 @@ import PlacesPage from "./PlacesPage";
 import PlaceWallPage from "./PlaceWallPage";
 import CreatePostPage from "./CreatePostPage";
 import ChatPage from "./ChatPage";
+import ChatRoomPage from "./ChatRoomPage";
 
 export {
   HomePage,
@@ -15,5 +16,6 @@ export {
   PlacesPage,
   PlaceWallPage,
   CreatePostPage,
-  ChatPage
+  ChatPage,
+  ChatRoomPage
 };
