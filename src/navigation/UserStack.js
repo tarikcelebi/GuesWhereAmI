@@ -1,4 +1,4 @@
-// kullanıcı giriş yaptıktan sonra ulaşabileceği sayfalar.
+// Kullanıcı giriş yaptıktan sonra ulaşabileceği sayfalar.
 import React from "react";
 
 import {

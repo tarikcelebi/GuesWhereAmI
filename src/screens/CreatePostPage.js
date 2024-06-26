@@ -5,26 +5,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { AddPostToPlaceWall } from "../redux/reducers/placeSlice.js";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig.js";
+import { getAuth } from "firebase/auth";
 
-const getCurrentUserFromDB = async () => {
-  const docRef = doc(db, "Users", "currentUser");
-  const docSnap = await getDoc(docRef);
+/* const getCurrentUserFromDB = async () => {
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
+  console.log(currentUser,"line 13 createPost");
 
-  if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
-    const userID = docSnap.data();
-    console.log("docDATA", userID.id);
-    return userID.id;
+  if (currentUser) {
+    const docRef = doc(db, "Users", currentUser.uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      return docSnap.data();  // Return the whole document data if needed
+    } else {
+      console.log("No such document!");
+      return null;
+    }
   } else {
-    // docSnap.data() will be undefined in this case
-    console.log("No such document!");
+    console.log("No user is authenticated");
+    return null;
   }
-};
+}; */
 
 const CreatePostPage = () => {
   const [content, setPostContent] = useState("");
   const dispatch = useDispatch();
-  const placeID = useSelector((state) => state.user.placeId);
+  const user = useSelector((state) => state.user);
+  const placeID = user.placeId;
+  const userUID = user.user.uid;
+  console.log(placeID,userUID);
+  
 
   const handlePostContentChange = (text) => {
     setPostContent(text);
@@ -32,12 +44,11 @@ const CreatePostPage = () => {
 
   const handleShareContent = async () => {
     try {
-      const currentUser = await getCurrentUserFromDB();
-      if (currentUser && placeID) {
+      if (userUID && placeID) {
         await dispatch(AddPostToPlaceWall({
           placeUID: placeID,
           text: content,
-          userUID: currentUser // Use the document ID from the returned data
+          userUID: userUID 
         }));
         Alert.alert("Success", "Post shared successfully!");
       } else {

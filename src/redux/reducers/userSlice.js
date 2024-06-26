@@ -24,6 +24,8 @@ export const login = createAsyncThunk("user/login", async ({ email, pwd }) => {
     const user = userCredential.user;
     const token = user.stsTokenManager.accessToken;
 
+    console.log(user);
+
     const userData = {
       token,
       user: user,
@@ -57,7 +59,7 @@ export const autoLogin = createAsyncThunk("user/autoLogin", async () => {
     if (token) {
 
       const user = getUserIdFromToken(token);
-      console.log(user);
+/*       console.log(user); */
       await setDoc(doc(db,"Users","currentUser"),{
         id:user.user_id,
         name:user.email

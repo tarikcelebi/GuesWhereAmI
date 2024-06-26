@@ -13,6 +13,7 @@ import { terminate } from "firebase/firestore";
 import { Divider } from "react-native-elements";
 import { Ionicons } from "@expo/vector-icons";
 import iconSet from "@expo/vector-icons/build/Fontisto";
+import { useNavigation } from "@react-navigation/native";
 
 const Post = ({ post }) => {
   return (
@@ -49,6 +50,7 @@ const PostHeader = ({ post }) => {
 };
 
 const PostFooter = ({ post }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.footer}>
       <View
@@ -58,10 +60,14 @@ const PostFooter = ({ post }) => {
           justifyContent: "space-between",
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("ChatRoomPage", { userId: post.userId })
+          }
+        >
           <Ionicons name="paper-plane-outline" size={25} />
         </TouchableOpacity>
-{/*         <TouchableOpacity>
+        {/*         <TouchableOpacity>
           <Ionicons name="paper-plane-outline" size={25} />
         </TouchableOpacity>
         <TouchableOpacity>
