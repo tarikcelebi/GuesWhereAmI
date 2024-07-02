@@ -18,20 +18,23 @@ import { Timestamp, setDoc, doc, collection, addDoc, query, orderBy, onSnapshot 
 import { db } from "../firebaseConfig.js";
 import {MessagesList} from "../components/Index.js"
 
-const ChatRoomPage = ({ route }) => {
-  const { userId } = route.params;
-
+const ChatRoomPage = ({ route,navigation }) => {
+  const { item } = route.params || {};
+  const { users } = item || {};
+  const userId = users?.[1]; 
   console.log(userId);
   const user = useSelector((state) => state.user);
-  const currentUserId = user.user.user_id;
-  console.log(user.user.user_id);
+  const currentUserId = user.user.uid;
+  console.log(user.user.uid);
   const textRef = useRef("");
   const inputRef = useRef("");
   const [messages,setMessages]=useState([]);
 
   useEffect(() => {
     createRoomIfNotExist();
-
+    if(userId===currentUserId){
+      
+    }
     let roomId = getRoomId(currentUserId, userId);
     const docRef = doc(db,"rooms", roomId);
     const messageRef = collection(docRef,"messages");
@@ -73,6 +76,7 @@ const ChatRoomPage = ({ route }) => {
       let roomId = getRoomId(currentUserId, userId);
       await setDoc(doc(db, "rooms", roomId), {
         roomId,
+        users: [currentUserId, userId],
         createdAt: Timestamp.fromDate(new Date()),
       });
     } else {

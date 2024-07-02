@@ -1,4 +1,3 @@
-import { GiftedChat } from "react-native-gifted-chat";
 import React, { useState, useEffect, useCallback } from "react";
 import {
   SafeAreaView,
@@ -17,12 +16,38 @@ import {
   orderBy,
   query,
   onSnapshot,
+  where,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import { Loading,ChatList } from "../components/Index";
+import { Loading, ChatList } from "../components/Index";
+import { useSelector } from "react-redux";
 
 const ChatPage = ({ navigation }) => {
-  const [people, setPeople] = useState([1,2,3]);
+  const user = useSelector((state) => state.user);
+  const [people, setPeople] = useState([1, 2, 3]);
+  const [rooms, setRooms] = useState([]);
+
+  const currentUserId = user.user.uid;
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      const roomsRef = collection(db, "rooms");
+      const q = query(
+        roomsRef,
+        where("users", "array-contains", currentUserId)
+      );
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        const roomsData = snapshot.docs.map((doc) => {
+          return doc.data();
+        });
+        setRooms([...roomsData]);
+      });
+    };
+
+    fetchRooms();
+  }, [currentUserId]);
+
+console.log(rooms);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -31,13 +56,9 @@ const ChatPage = ({ navigation }) => {
         <Text style={styles.text}>Mesajlar</Text>
       </View>
       <ScrollView style={styles.body}>
-        {people?.length > 0 ? (
-          <ChatList users={people} />
-        ) : (
-            <Loading />
-        )}
+        {people?.length > 0 ? <ChatList users={rooms} /> : <Loading />}
       </ScrollView>
-        <NavBar navigation={navigation} />
+      <NavBar navigation={navigation} />
     </SafeAreaView>
   );
 };
@@ -65,7 +86,6 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderWidth: 1,
   },
-
 });
 /* const ChatPage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
