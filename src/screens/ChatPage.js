@@ -27,7 +27,7 @@ const ChatPage = ({ navigation }) => {
   const [people, setPeople] = useState([1, 2, 3]);
   const [rooms, setRooms] = useState([]);
 
-  const currentUserId = user.user.uid;
+  const currentUserId = user?.user?.uid || user?.user?.user_id || 1;
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -47,7 +47,7 @@ const ChatPage = ({ navigation }) => {
     fetchRooms();
   }, [currentUserId]);
 
-console.log(rooms);
+
 
   return (
     <SafeAreaView style={styles.container}>

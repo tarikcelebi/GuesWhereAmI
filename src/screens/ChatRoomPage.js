@@ -18,26 +18,31 @@ import { Timestamp, setDoc, doc, collection, addDoc, query, orderBy, onSnapshot 
 import { db } from "../firebaseConfig.js";
 import {MessagesList} from "../components/Index.js"
 
-const ChatRoomPage = ({ route,navigation }) => {
-  const { item } = route.params || {};
-  const { users } = item || {};
-  const userId = users?.[1]; 
-  console.log(userId);
+const ChatRoomPage = ({ route }) => {
   const user = useSelector((state) => state.user);
-  const currentUserId = user.user.uid;
-  console.log(user.user.uid);
+  const currentUserId = user?.user?.uid || user?.user?.user_id || 1;
+  const { item, userId: userIdFromPost } = route.params || {};
+  const userId = item ? (item.users?.[0] === currentUserId ? item.users[1] : item.users[0]) : userIdFromPost;
+
+  console.log(item, "line 26.");
+  console.log(item,"line 26.");
+  console.log(userId,"line 27")
+  console.log(item,"line 26.");
+  
+ console.log(userId);
+
+  console.log(currentUserId);
   const textRef = useRef("");
   const inputRef = useRef("");
   const [messages,setMessages]=useState([]);
 
   useEffect(() => {
-    createRoomIfNotExist();
-    if(userId===currentUserId){
-      
+    if(userId!==currentUserId){
+      createRoomIfNotExist();
     }
-    let roomId = getRoomId(currentUserId, userId);
-    const docRef = doc(db,"rooms", roomId);
-    const messageRef = collection(docRef,"messages");
+    const roomId = getRoomId(currentUserId, userId);
+    const roomRef = doc(db, "rooms", roomId);
+    const messageRef = collection(roomRef, "messages");
 
     const q = query(messageRef, orderBy("createdAt","asc"));
 
