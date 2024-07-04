@@ -32,6 +32,13 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow $(GuessWhereAmI) to use your location."
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow $(GuessWhereAmI) to access your photos",
+          "cameraPermission": "Allow $(GuessWhereAmI) to access your camera"
+        }
       ]
     ]
   }

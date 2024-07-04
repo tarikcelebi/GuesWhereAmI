@@ -23,8 +23,8 @@ import { useDispatch } from "react-redux";
 import { logout } from "../redux/reducers/userSlice.js";
 import NavBar from "../components/NavBar.js";
 import ButtonCustom from "../components/ButtonCustom.js";
-import Datas from "../../Data.js";
-
+/* import Datas from "../../Data.js";
+ */
 
 
 const HomePage = ({ navigation }) => {
@@ -130,7 +130,7 @@ const HomePage = ({ navigation }) => {
         />
       </View>
 
-        <NavBar navigation={navigation} />
+      <NavBar navigation={navigation} />
 
     </SafeAreaView>
   );
