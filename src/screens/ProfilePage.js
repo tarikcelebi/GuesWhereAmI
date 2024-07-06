@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Alert } from "react-native";
 import NavBar from "../components/NavBar";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,13 +11,15 @@ const ProfilePage = ({ navigation }) => {
 
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
 
-  useEffect(async () => {
+  useEffect(() => {
+    async () => {
       requestPermission();
       if (permission?.status !== "granted") {
-      setErrorMsg("Permission to access location was denied");
-      console.log(errorMsg + "line 28");
-      return;
-    }
+        setErrorMsg("Permission to access location was denied");
+        console.log(errorMsg + "line 28");
+        return;
+      }
+    };
   }, []);
 
   return (

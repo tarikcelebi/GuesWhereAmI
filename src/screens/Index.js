@@ -7,6 +7,7 @@ import PlaceWallPage from "./PlaceWallPage";
 import CreatePostPage from "./CreatePostPage";
 import ChatPage from "./ChatPage";
 import ChatRoomPage from "./ChatRoomPage";
+import NotificationsPage from "./NotificationsPage";
 
 export {
   HomePage,
@@ -17,5 +18,6 @@ export {
   PlaceWallPage,
   CreatePostPage,
   ChatPage,
-  ChatRoomPage
+  ChatRoomPage,
+  NotificationsPage
 };

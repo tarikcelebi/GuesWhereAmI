@@ -130,7 +130,7 @@ const HomePage = ({ navigation }) => {
         />
       </View>
 
-      <NavBar navigation={navigation} />
+{/*       <NavBar navigation={navigation} /> */}
 
     </SafeAreaView>
   );

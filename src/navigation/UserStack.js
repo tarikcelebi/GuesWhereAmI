@@ -17,13 +17,13 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
+import BottomTabNav from "./BottomTabNav";
 
 const Stack = createNativeStackNavigator();
 
 const UserStack = () => {
-
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="BottomTabNavigation">
       <Stack.Screen
         name="HomePage"
         component={HomePage}
@@ -58,7 +58,9 @@ const UserStack = () => {
         name="ChatRoomPage"
         component={ChatRoomPage}
         options={({ route, navigation }) => ({
-          title: route.params.item ? `Chat with ${route.params.item}` : "Chat Room",
+          title: route.params.item
+            ? `Chat with ${route.params.item}`
+            : "Chat Room",
           headerShadowVisible: false,
           headerLeft: () => (
             <View>
@@ -68,6 +70,11 @@ const UserStack = () => {
             </View>
           ),
         })}
+      />
+      <Stack.Screen
+        name="BottomTabNavigation"
+        component={BottomTabNav}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
