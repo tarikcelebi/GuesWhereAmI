@@ -6,6 +6,7 @@ import Post from "./Home/Post";
 import Header from "./Home/Header";
 import ChatList from "./ChatList";
 import MessagesList from "./MessagesList";
+import TabBar from "./TabBar";
 
 export {
   Loading,
@@ -15,5 +16,6 @@ export {
   Post,
   Header,
   ChatList,
-  MessagesList
+  MessagesList,
+  TabBar,
 };

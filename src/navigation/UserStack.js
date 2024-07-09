@@ -1,6 +1,5 @@
 // Kullanıcı giriş yaptıktan sonra ulaşabileceği sayfalar.
 import React from "react";
-
 import {
   HomePage,
   PlacesPage,
@@ -76,6 +75,7 @@ const UserStack = () => {
         component={BottomTabNav}
         options={{ headerShown: false }}
       />
+
     </Stack.Navigator>
   );
 };

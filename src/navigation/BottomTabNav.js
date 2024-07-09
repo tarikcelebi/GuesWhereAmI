@@ -1,13 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import {
-  SimpleLineIcons,
+import Ionicons from "@expo/vector-icons/Ionicons";
 
-  Fontisto,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
-import { useFonts } from "expo-font";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { retry } from "@reduxjs/toolkit/query";
 import {
@@ -15,8 +9,10 @@ import {
   HomePage,
   PlacesPage,
   ChatPage,
-  NotificationPage,
+  NotificationsPage,
 } from "../screens/Index";
+import TabBar from "../components/TabBar";
+
 
 const Tab = createBottomTabNavigator();
 
@@ -31,43 +27,27 @@ const screenOptions = {
     left: 0,
     elevation: 0,
     height: 60,
-    backgrountColor: "white",
+    backgroundColor: "white",
   },
 };
 
 const BottomTabNav = () => {
   return (
-    <Tab.Navigator screenOptions={screenOptions}>
+    <Tab.Navigator screenOptions={screenOptions}  tabBar={props=><TabBar{...props}/>} >
       <Tab.Screen
         name="HomePage"
         component={HomePage}
         size={24}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <SimpleLineIcons
-                name="home"
-                size={24}
-                color={focused ? "black" : "white"}
-              />
-            );
-          },
+          title: "Home",
         }}
       />
-      {/*       <Tab.Screen
+      <Tab.Screen
         name="ProfilePage"
         component={ProfilePage}
         size={24}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <MaterialIcons
-                name="person-outline"
-                size={24}
-                color={focused ? "black" : "white"}
-              />
-            );
-          },
+          title: "Profile",
         }}
       />
       <Tab.Screen
@@ -75,15 +55,7 @@ const BottomTabNav = () => {
         component={PlacesPage}
         size={24}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <SimpleLineIcons
-                name="home"
-                size={24}
-                color={focused ? "black" : "white"}
-              />
-            );
-          },
+          title: "Places",
         }}
       />
       <Tab.Screen
@@ -91,34 +63,17 @@ const BottomTabNav = () => {
         component={ChatPage}
         size={24}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <MaterialCommunityIcons
-                name="message-text-outline"
-                size={24}
-                color={focused ? "black" : "white"}
-              />
-            );
-          },
+          title: "Chat",
         }}
       />
       <Tab.Screen
         name="NotificationsPage"
-        component={NotificationPage}
+        component={NotificationsPage}
         size={24}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <MaterialIcons
-                name="settings"
-                size={24}
-                color={focused ? "black" : "white"}
-              />
-            );
-          },
+          title: "Notifications",
         }}
       />
-      */}
     </Tab.Navigator>
   );
 };

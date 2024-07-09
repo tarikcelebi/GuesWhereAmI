@@ -47,8 +47,6 @@ const ChatPage = ({ navigation }) => {
     fetchRooms();
   }, [currentUserId]);
 
-
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
@@ -58,7 +56,8 @@ const ChatPage = ({ navigation }) => {
       <ScrollView style={styles.body}>
         {people?.length > 0 ? <ChatList users={rooms} /> : <Loading />}
       </ScrollView>
-      <NavBar navigation={navigation} />
+      {/*       <NavBar navigation={navigation} />
+       */}
     </SafeAreaView>
   );
 };

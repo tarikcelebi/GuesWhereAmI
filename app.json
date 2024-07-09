@@ -39,7 +39,8 @@
           "photosPermission": "Allow $(GuessWhereAmI) to access your photos",
           "cameraPermission": "Allow $(GuessWhereAmI) to access your camera"
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }

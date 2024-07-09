@@ -195,7 +195,7 @@ const PlacesPage = () => {
           />
         </View>
       </View>
-      <NavBar navigation={navigation} />
+     {/*  <NavBar navigation={navigation} /> */}
     </SafeAreaView>
   );
 };

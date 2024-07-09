@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const NotificationsPage = () => {
+const NotificationsPage = ({navigation}) => {
   return (
     <View style={styles.container}>
       <Text>NotificationsPage</Text>
