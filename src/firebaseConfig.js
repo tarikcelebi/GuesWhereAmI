@@ -9,7 +9,7 @@ import { getDatabase } from "firebase/database";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBVFhCfS4Beaui1c6bxCPo7yiOesH1UiPc",
+  apiKey: "",
   authDomain: "guesswhereami-929be.firebaseapp.com",
   projectId: "guesswhereami-929be",
   storageBucket: "guesswhereami-929be.appspot.com",
