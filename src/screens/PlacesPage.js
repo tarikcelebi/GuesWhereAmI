@@ -21,7 +21,17 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { userEnteredPlaceInfo } from "../redux/reducers/userSlice.js";
 import Datas from "../../Data.js";
-
+import {
+  collection,
+  query,
+  orderBy,
+  getDocs,
+  startAt, 
+  endAt
+} from "firebase/firestore";
+import { db } from "../firebaseConfig";
+import * as geofire from 'geofire-common';
+ 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
   const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -35,6 +45,22 @@ const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   const distance = R * c;
   return distance;
+};
+
+const calculateBoundingBox = (lat, lon, distanceInKm) => {
+  const R = 6371; // Radius of the Earth in km
+  const angularDistance = distanceInKm / R;
+
+  const latChange = angularDistance * (180 / Math.PI);
+  const lonChange =
+    (angularDistance * (180 / Math.PI)) / Math.cos(lat * (Math.PI / 180));
+
+  const minLat = lat - latChange;
+  const maxLat = lat + latChange;
+  const minLon = lon - lonChange;
+  const maxLon = lon + lonChange;
+
+  return { minLat, maxLat, minLon, maxLon };
 };
 
 const PlacesPage = () => {
@@ -66,22 +92,68 @@ const PlacesPage = () => {
 
         let location = await Location.getCurrentPositionAsync({});
         setMyLocation(location.coords);
-        console.log("Line 53(PlacesPage):");
-        console.log(location.coords);
+        /* console.log("Line 53(PlacesPage):");
+        console.log(location.coords); */
       })();
   }, []);
 
+  // Fetch the cafes only nearby to the user from the firebase
+
   useEffect(() => {
-    // Fetch cafes data (replace with your API call or local data)
     const fetchCafes = async () => {
-      setCafes(Datas);
-      console.log(cafes);
+      try {
+        const center = [mylocation.latitude, mylocation.longitude];
+        const radiusInM = 7 * 1000;
+
+
+        // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
+        // a separate query for each pair. There can be up to 9 pairs of bounds
+        // depending on overlap, but in most cases there are 4.
+        const bounds = geofire.geohashQueryBounds(center, radiusInM);
+        const promises = [];
+        for (const b of bounds) {
+          const q = query(
+            collection(db, "locations"),
+            orderBy("GeoPoint"),
+            startAt(b[0]),
+            endAt(b[1])
+          );
+         console.log(q);
+          promises.push(getDocs(q));
+        }
+       
+
+        // Collect all the query results together into a single list
+        const snapshots = await Promise.all(promises);
+
+        const matchingDocs = [];
+        for (const snap of snapshots) {
+          for (const doc of snap.docs) {
+            const lat = doc.get("lat");
+            const lng = doc.get("lng");
+
+
+            // We have to filter out a few false positives due to GeoHash
+            // accuracy, but most will match
+            const distanceInKm = geofire.distanceBetween([lat, lng], center);
+            const distanceInM = distanceInKm * 1000;
+            if (distanceInM <= radiusInM) {
+              matchingDocs.push(doc);
+            }
+          }
+        }
+
+        setNearbyCafes(matchingDocs);
+        console.log("Datas:", matchingDocs);
+      } catch (err) {
+        console.log("Error fetching cafes:", err);
+      }
     };
 
     fetchCafes();
-  }, []);
+  }, [mylocation]);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (mylocation && cafes.length > 0) {
       const nearbyCafes = cafes.filter(
         (cafe) =>
@@ -96,12 +168,12 @@ const PlacesPage = () => {
       console.log("Line 95(PlacePage)");
       console.log(nearbyCafes);
     }
-  }, [mylocation, cafes]);
+  }, [mylocation, cafes]); */
 
   const handleCalloutPress = ({ id, title }) => {
     dispatch(
       userEnteredPlaceInfo({
-        placeId:id,
+        placeId: id,
         placeName: title,
         latitude: mylocation.latitude,
         longitude: mylocation.longitude,
@@ -184,6 +256,7 @@ const PlacesPage = () => {
           <GooglePlacesAutocomplete
             styles={{ textInput: styles.input }}
             placeholder="Search"
+            fetchDetails={true}
             onPress={(data, details = null) => {
               // 'details' is provided when fetchDetails = true
               console.log(data, details);
@@ -195,7 +268,7 @@ const PlacesPage = () => {
           />
         </View>
       </View>
-     {/*  <NavBar navigation={navigation} /> */}
+      {/*  <NavBar navigation={navigation} /> */}
     </SafeAreaView>
   );
 };
@@ -203,7 +276,7 @@ const PlacesPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:"tomato"
+    backgroundColor: "tomato",
   },
   map: {
     width: Dimensions.get("window").width,

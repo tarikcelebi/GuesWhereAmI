@@ -9,10 +9,10 @@ import {
   HomePage,
   PlacesPage,
   ChatPage,
+  PlaceWallPage,
   NotificationsPage,
 } from "../screens/Index";
 import TabBar from "../components/TabBar";
-
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +33,10 @@ const screenOptions = {
 
 const BottomTabNav = () => {
   return (
-    <Tab.Navigator screenOptions={screenOptions}  tabBar={props=><TabBar{...props}/>} >
+    <Tab.Navigator
+      screenOptions={screenOptions}
+      tabBar={(props) => <TabBar {...props} />}
+    >
       <Tab.Screen
         name="HomePage"
         component={HomePage}

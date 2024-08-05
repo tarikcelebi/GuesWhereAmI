@@ -38,15 +38,14 @@ const PlaceWallPage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title={placeName} />
+      <View style={styles.headerContainer}>
+        <Header title={placeName} />
+      </View>
       <ScrollView>
         {posts.map((post, index) => {
-          return(
-          <Post post={post} key={index} />
-        );
+          return <Post post={post} key={index} />;
         })}
       </ScrollView>
-      <NavBar navigation={navigation} />
     </SafeAreaView>
   );
 };
@@ -64,6 +63,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "tomato",
   },
+  headerContainer:{
+    marginTop:10
+  }
 });
 
 export default PlaceWallPage;

@@ -8,6 +8,7 @@ import {
   CreatePostPage,
   ChatPage,
   ChatRoomPage,
+  AppNotificationsLayout
 } from "../screens/Index";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, TouchableOpacity } from "react-native";
@@ -41,12 +42,38 @@ const UserStack = () => {
       <Stack.Screen
         name="PlaceWallPage"
         component={PlaceWallPage}
-        options={{ headerShown: false }}
+        options={({ navigation }) => ({
+          title:"Place Wall",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: 'tomato',
+          },
+          headerLeft: () => (
+            <View>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Entypo name="chevron-left" size={hp(4)} color={"white"} />
+              </TouchableOpacity>
+            </View>
+          ),
+        })}
       />
       <Stack.Screen
         name="CreatePostPage"
         component={CreatePostPage}
-        options={{ headerShown: false }}
+        options={({ navigation }) => ({
+          title:"Create Post",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: 'tomato',
+          },
+          headerLeft: () => (
+            <View>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Entypo name="chevron-left" size={hp(4)} color={"white"} />
+              </TouchableOpacity>
+            </View>
+          ),
+        })}
       />
       <Stack.Screen
         name="ChatPage"
@@ -73,6 +100,11 @@ const UserStack = () => {
       <Stack.Screen
         name="BottomTabNavigation"
         component={BottomTabNav}
+        options={{ headerShown: false }}
+      />
+            <Stack.Screen
+        name="AppNotificationsLayout"
+        component={AppNotificationsLayout}
         options={{ headerShown: false }}
       />
 

@@ -51,7 +51,7 @@ const ChatPage = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       <View style={styles.header}>
-        <Text style={styles.text}>Mesajlar</Text>
+        <Text style={styles.text}>Messages</Text>
       </View>
       <ScrollView style={styles.body}>
         {people?.length > 0 ? <ChatList users={rooms} /> : <Loading />}
@@ -77,13 +77,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     borderColor: "white",
-    borderWidth: 1,
     height: "%10",
   },
   body: {
     flex: 4,
     borderColor: "white",
-    borderWidth: 1,
   },
 });
 /* const ChatPage = ({ navigation }) => {
