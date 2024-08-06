@@ -12,6 +12,9 @@ import {
   Dimensions,
   Text,
   Button,
+  Image,
+  Animated,
+  ScrollView,
 } from "react-native";
 import NavBar from "../components/NavBar";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
@@ -26,12 +29,21 @@ import {
   query,
   orderBy,
   getDocs,
-  startAt, 
-  endAt
+  startAt,
+  endAt,
 } from "firebase/firestore";
 import { db } from "../firebaseConfig";
-import * as geofire from 'geofire-common';
- 
+import * as geofire from "geofire-common";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
+
+const { width, height } = Dimensions.get("window");
+const CARD_HEIGHT = hp(220);
+const CARD_WIDTH = width * 0.8;
+const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
+
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const R = 6371;
   const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -103,48 +115,51 @@ const PlacesPage = () => {
     const fetchCafes = async () => {
       try {
         const center = [mylocation.latitude, mylocation.longitude];
-        const radiusInM = 7 * 1000;
-
+        const radiusInM = 2 * 1000;
 
         // Each item in 'bounds' represents a startAt/endAt pair. We have to issue
         // a separate query for each pair. There can be up to 9 pairs of bounds
         // depending on overlap, but in most cases there are 4.
+        /*         console.log(geofire);
+         */
         const bounds = geofire.geohashQueryBounds(center, radiusInM);
         const promises = [];
         for (const b of bounds) {
           const q = query(
             collection(db, "locations"),
-            orderBy("GeoPoint"),
+            orderBy("geohash"),
             startAt(b[0]),
             endAt(b[1])
           );
-         console.log(q);
+          /* console.log(q); */
           promises.push(getDocs(q));
         }
-       
 
         // Collect all the query results together into a single list
         const snapshots = await Promise.all(promises);
-
+        /*         console.log(snapshots);
+         */
         const matchingDocs = [];
         for (const snap of snapshots) {
           for (const doc of snap.docs) {
+            const data = doc.data();
             const lat = doc.get("lat");
             const lng = doc.get("lng");
 
-
-            // We have to filter out a few false positives due to GeoHash
+            /*             console.log("document: ",doc);
+             */ // We have to filter out a few false positives due to GeoHash
             // accuracy, but most will match
             const distanceInKm = geofire.distanceBetween([lat, lng], center);
             const distanceInM = distanceInKm * 1000;
             if (distanceInM <= radiusInM) {
-              matchingDocs.push(doc);
+              matchingDocs.push({ id: doc.id, ...data });
             }
           }
         }
 
         setNearbyCafes(matchingDocs);
-        console.log("Datas:", matchingDocs);
+        console.log(nearbyCafes[0].image)
+        console.log("Datas:", nearbyCafes); 
       } catch (err) {
         console.log("Error fetching cafes:", err);
       }
@@ -153,22 +168,39 @@ const PlacesPage = () => {
     fetchCafes();
   }, [mylocation]);
 
-  /*   useEffect(() => {
-    if (mylocation && cafes.length > 0) {
-      const nearbyCafes = cafes.filter(
-        (cafe) =>
-          calculateDistance(
-            mylocation.latitude,
-            mylocation.longitude,
-            cafe.latitude,
-            cafe.longitude
-          ) <= 2
-      );
-      setNearbyCafes(nearbyCafes);
-      console.log("Line 95(PlacePage)");
-      console.log(nearbyCafes);
-    }
-  }, [mylocation, cafes]); */
+  let mapIndex = 0;
+  let mapAnimation = new Animated.Value(0);
+
+  useEffect(()=>{
+    mapAnimation.addListener(({ value }) => {
+      let index = Math.floor(value / CARD_WIDTH + 0.3); // animate 30% away from landing on the next item
+      if (index >= nearbyCafes.length) {
+        index = nearbyCafes.length - 1;
+      }
+      if (index <= 0) {
+        index = 0;
+      }
+
+      clearTimeout(regionTimeout);
+
+      const regionTimeout = setTimeout(() => {
+        if( mapIndex !== index ) {
+          mapIndex = index;
+          const { cafe } = nearbyCafes[index];
+          _map.current.animateToRegion(
+            {
+              ...coordinate,
+              latitudeDelta: cafe.lat,
+              longitudeDelta: cafe.lng,
+            },
+            350
+          );
+        }
+      }, 10);
+
+
+    });
+  });
 
   const handleCalloutPress = ({ id, title }) => {
     dispatch(
@@ -181,6 +213,8 @@ const PlacesPage = () => {
     );
     navigation.navigate("PlaceWallPage");
   };
+  const blurhash =
+    "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
 
   return (
     <SafeAreaView style={styles.container}>
@@ -235,8 +269,8 @@ const PlacesPage = () => {
             <Marker
               key={cafe.id}
               coordinate={{
-                latitude: cafe.latitude,
-                longitude: cafe.longitude,
+                latitude: cafe.lat,
+                longitude: cafe.lng,
               }}
             >
               <Callout
@@ -246,6 +280,13 @@ const PlacesPage = () => {
                 }}
               >
                 <Text style={styles.text}>{cafe.title}</Text>
+                <Image
+                  style={styles.image}
+                  source={{ uri: cafe.image }}
+                  placeholder={{ blurhash }}
+                  contentFit="cover"
+                  transition={1000}
+                />
                 <Button title="Go to place wall" />
               </Callout>
             </Marker>
@@ -268,7 +309,31 @@ const PlacesPage = () => {
           />
         </View>
       </View>
-      {/*  <NavBar navigation={navigation} /> */}
+      <Animated.ScrollView
+        horizontal
+        pagingEnabled
+        scrollEventThrottle={1}
+        showsHorizontalScrollIndicator={false}
+        style={styles.scrollView}
+        contentInset={{
+          top: 0,
+          left: SPACING_FOR_CARD_INSET,
+          bottom: 0,
+          right: SPACING_FOR_CARD_INSET
+        }}
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: {
+                contentOffset: {
+                  x: mapAnimation,
+                }
+              },
+            },
+          ],
+          {useNativeDriver: true}
+        )}
+      ></Animated.ScrollView>
     </SafeAreaView>
   );
 };
@@ -312,10 +377,22 @@ const styles = StyleSheet.create({
     color: "red",
   },
   placeCallout: {
-    width: 200,
-    height: 200,
-    flex: 1,
+    width: wp("50%"),
+    padding: 5,
     alignItems: "center",
+  },
+  image: {
+    width: wp("40%"),
+    height: hp("10%"),
+    marginBottom: 5,
+    resizeMode: "stretch",
+  },
+  scrollView: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingVertical: 10,
   },
 });
 

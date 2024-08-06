@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   Image,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
 } from "react-native";
 import {
   collection,
@@ -23,32 +23,31 @@ import { useDispatch } from "react-redux";
 import { logout } from "../redux/reducers/userSlice.js";
 import NavBar from "../components/NavBar.js";
 import ButtonCustom from "../components/ButtonCustom.js";
-/* import Datas from "../../Data.js";
- */
-
+import Datas from "../../Data.js";
+import * as geofire from "geofire-common";
 
 const HomePage = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [images, setImages] = useState({});
   const dispacth = useDispatch();
 
-
-
   const handleLogout = () => {
     dispacth(logout());
   };
 
-  /*  const sendData = async () => {
+  const sendData = async () => {
     try {
       const promises = Datas.map(async (item) => {
         const { id, latitude, longitude, title, image } = item;
         console.log(`Processing item: ${title}`); // Debugging
         const imageUrl = await uploadImageToStorage(image);
+        const hash = geofire.geohashForLocation([latitude, longitude]);
 
         await addDoc(collection(db, "locations"), {
           id,
-          latitude,
-          longitude,
+          geohash: hash,
+          lat: latitude,
+          lng: longitude,
           title,
           image: imageUrl,
         });
@@ -70,7 +69,7 @@ const HomePage = ({ navigation }) => {
       const blob = await response.blob();
 
       // Extract file name from the URI
-      const fileName = assetSource.uri.split('/').pop();
+      const fileName = assetSource.uri.split("/").pop();
       const storageRef = ref(storage, `images/${fileName}`);
       console.log(`Uploading ${fileName} to Firebase Storage`); // Debugging
 
@@ -84,7 +83,7 @@ const HomePage = ({ navigation }) => {
       throw error;
     }
   };
- */
+
   const updateData = async (value) => {
     const userData = await doc(db, "users", value);
     const update = await updateDoc(userData, {
@@ -101,9 +100,8 @@ const HomePage = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      
       <View style={styles.container}>
-      <StatusBar barStyle="light-content"/>
+        <StatusBar barStyle="light-content" />
         <Text>HomePage</Text>
         {data.map((item, index) => {
           return (
@@ -121,6 +119,7 @@ const HomePage = ({ navigation }) => {
           title="Save"
           buttonColor="white"
           pressedButtonColor="blue"
+          handleOnPress={sendData}
         />
         <ButtonCustom
           title="logout"
@@ -130,8 +129,7 @@ const HomePage = ({ navigation }) => {
         />
       </View>
 
-{/*    <NavBar navigation={navigation} />  */}
-
+      {/*    <NavBar navigation={navigation} />  */}
     </SafeAreaView>
   );
 };
@@ -146,11 +144,11 @@ const styles = StyleSheet.create({
   main: {
     flex: 3,
   },
-  footer:{
+  footer: {
     flex: 1,
-    marginBottom:0,
-    paddingBottom:0
-  }
+    marginBottom: 0,
+    paddingBottom: 0,
+  },
 });
 
 export default HomePage;
