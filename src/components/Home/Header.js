@@ -12,11 +12,15 @@ import { useNavigation } from "@react-navigation/native";
 
 const Header = (prop) => {
   const navigation = useNavigation();
+  console.log(prop);
   return (
     <View style={styles.container}>
-      <TouchableOpacity>
+      <View style={styles.titleStyle}>
+        <TouchableOpacity>
         <Text style={styles.TextHeader}>{prop.title}</Text>
       </TouchableOpacity>
+      </View>
+      
       <View style={styles.iconContainer}>
         <TouchableOpacity onPress={()=> navigation.navigate("CreatePostPage")}>
           <Ionicons style={styles.icon} name="add-circle-outline" size={30} color="black" />
@@ -34,7 +38,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   TextHeader: {
-    width: 150,
     height: 30,
     fontSize:20,
 
@@ -43,6 +46,8 @@ const styles = StyleSheet.create({
   iconContainer: {
     flexDirection: "row",
     color: "black",
+    flex:1,
+    justifyContent:"flex-end"
   },
   icon: {
     width: 30,
@@ -50,6 +55,9 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     color:"black"
   },
+  titleStyle:{
+    flex:3,
+  }
 });
 
 export default Header;

@@ -8,7 +8,8 @@ import {
   CreatePostPage,
   ChatPage,
   ChatRoomPage,
-  AppNotificationsLayout
+  AppNotificationsLayout,
+  EditProfilePage,
 } from "../screens/Index";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { View, TouchableOpacity } from "react-native";
@@ -43,10 +44,10 @@ const UserStack = () => {
         name="PlaceWallPage"
         component={PlaceWallPage}
         options={({ navigation }) => ({
-          title:"Place Wall",
+          title: "Feed Wall",
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: 'tomato',
+            backgroundColor: "tomato",
           },
           headerLeft: () => (
             <View>
@@ -61,10 +62,10 @@ const UserStack = () => {
         name="CreatePostPage"
         component={CreatePostPage}
         options={({ navigation }) => ({
-          title:"Create Post",
+          title: "Create Post",
           headerShadowVisible: false,
           headerStyle: {
-            backgroundColor: 'tomato',
+            backgroundColor: "tomato",
           },
           headerLeft: () => (
             <View>
@@ -102,12 +103,29 @@ const UserStack = () => {
         component={BottomTabNav}
         options={{ headerShown: false }}
       />
-            <Stack.Screen
+      <Stack.Screen
         name="AppNotificationsLayout"
         component={AppNotificationsLayout}
         options={{ headerShown: false }}
       />
-
+      <Stack.Screen
+        name="EditProfilePage"
+        component={EditProfilePage}
+        options={({ navigation }) => ({
+          title: "Edit Profile",
+          headerShadowVisible: false,
+          headerStyle: {
+            backgroundColor: "tomato",
+          },
+          headerLeft: () => (
+            <View>
+              <TouchableOpacity onPress={() => navigation.goBack()}>
+                <Entypo name="chevron-left" size={hp(4)} color={"white"} />
+              </TouchableOpacity>
+            </View>
+          ),
+        })}
+      />
     </Stack.Navigator>
   );
 };

@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#FF6347"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.qunframe.GuessWhereAmI",
@@ -49,8 +47,7 @@
           "photosPermission": "Allow $(GuessWhereAmI) to access your photos",
           "cameraPermission": "Allow $(GuessWhereAmI) to access your camera"
         }
-      ],
-      "expo-font"
+      ]
     ],
     "extra": {
       "eas": {

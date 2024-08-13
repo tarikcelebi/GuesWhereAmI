@@ -18,6 +18,7 @@ import {
 } from "react-native-responsive-screen";
 import { Ionicons } from "@expo/vector-icons";
 import { SceneMap, TabView, TabBar } from "react-native-tab-view";
+import { useNavigation } from "@react-navigation/native";
 
 const PlacesRoutes = () => (
   <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -39,6 +40,7 @@ const ProfilePage = ({ navigation }) => {
   const [permission, requestPermission] = ImagePicker.useCameraPermissions();
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);
+  const navigate= useNavigation();
 
   const renderScene = ({ route }) => {
     switch (route.key) {
@@ -190,6 +192,7 @@ const ProfilePage = ({ navigation }) => {
               borderRadius: 10,
               marginHorizontal: 25,
             }}
+            onPress={()=>{navigation.navigate("EditProfilePage")}}
           >
             <Text
               style={{ fontSize: wp(3), color: "black", fontWeight: "bold" }}

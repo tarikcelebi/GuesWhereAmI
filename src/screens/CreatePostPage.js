@@ -34,7 +34,8 @@ const CreatePostPage = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
   const placeID = user.placeId;
-  const userUID = user.user.uid;
+  const userUID = user.user.user_id ? user.user.user_id :  user.user.uid;
+  console.log(user);
   console.log(placeID,userUID);
   
 
@@ -71,6 +72,7 @@ const CreatePostPage = () => {
           multiline={true}
           textAlignVertical="top"
           value={content}
+          maxLength={150}
           onChangeText={handlePostContentChange}
         />
         <ButtonCustom

@@ -7,6 +7,9 @@ import Header from "./Home/Header";
 import ChatList from "./ChatList";
 import MessagesList from "./MessagesList";
 import TabBar from "./TabBar";
+import CustomMarker from "./CustomMarker";
+import PlaceMarkerItem from "./PlaceMarkerItem";
+import PopularPlaceList from "./PopularPlaceList";
 
 export {
   Loading,
@@ -18,4 +21,7 @@ export {
   ChatList,
   MessagesList,
   TabBar,
+  CustomMarker,
+  PlaceMarkerItem,
+  PopularPlaceList,
 };

@@ -6,6 +6,7 @@ import {
   View,
   ScrollView,
   StatusBar,
+  FlatList
 } from "react-native";
 import NavBar from "../components/NavBar";
 import {

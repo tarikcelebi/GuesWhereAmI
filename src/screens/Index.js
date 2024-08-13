@@ -9,6 +9,7 @@ import ChatPage from "./ChatPage";
 import ChatRoomPage from "./ChatRoomPage";
 import NotificationsPage from "./Notification/NotificationsPage";
 import AppNotificationsLayout from "./Notification/_layout";
+import EditProfilePage from "./EditProfilePage";
 
 export {
   HomePage,
@@ -21,5 +22,6 @@ export {
   ChatPage,
   ChatRoomPage,
   NotificationsPage,
-  AppNotificationsLayout
+  AppNotificationsLayout,
+  EditProfilePage,
 };
